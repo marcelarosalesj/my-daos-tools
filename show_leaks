@@ -1,0 +1,70 @@
+#!/bin/python3
+from bs4 import BeautifulSoup
+import os
+import argparse
+
+parser = argparse.ArgumentParser(description='Show Valgrind Summary')
+parser.add_argument('-l', '--level', default=0, help='summary level')
+
+class XML_Valgrind:
+	def __init__(self, file_path):
+		self.file_path = file_path
+		with open(self.file_path) as ff:
+			content = ff.read()
+		self.soup = BeautifulSoup(content, 'xml')
+		self.leaks = {}
+		self.command = [ line.text
+				 for line in self.soup.find_all('line')
+				 if 'Command' in line.text ][0] 
+
+	def print_leak_summary(self, lvl = 0):
+		"""
+		level 0 means do not print still reachable not empty 
+		level 1 means print all errors reported 
+		"""
+		errors = self.soup.find_all('error')
+		for error in errors:
+			kind = error.kind.text
+			if kind in self.leaks:
+				self.leaks[kind] = self.leaks[kind] + 1
+			else:
+				self.leaks[kind] = 1
+		if lvl == 0:
+			if len(self.leaks) == 1:
+				[(k, v)] = self.leaks.items()
+				if not 'StillReachable' in k:
+					print('-'*50)
+					print('{}'.format(self.command))
+					print('{}'.format(self.file_path))
+					print('-'*50)
+					for key, value in self.leaks.items():
+						print('{}:\t\t {}'.format(key, value))
+					print('-'*50)
+					print('\n')
+				
+			elif len(self.leaks) > 1:
+				print('-'*50)
+				print('{}'.format(self.command))
+				print('{}'.format(self.file_path))
+				print('-'*50)
+				for key, value in self.leaks.items():
+					if not 'StillReachable' in key:
+						print('{}:\t\t {}'.format(key, value))
+				print('-'*50)
+				print('\n')
+		else:
+			print('Not implemented yet')
+			return
+
+
+def main():
+	args = parser.parse_args()
+	level = args.level
+	xml_files = [ i for i in os.listdir('.') if i.endswith(".xml") ]
+	for xml in xml_files:
+		xml_valgrind = XML_Valgrind(xml)
+		xml_valgrind.print_leak_summary(lvl = level)
+		
+
+if __name__ == '__main__':
+	main()
