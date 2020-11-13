@@ -1,0 +1,23 @@
+#!/bin/python3
+import os
+import argparse
+
+from vxml import VXML_Report
+
+parser = argparse.ArgumentParser(description='Show Valgrind Summary')
+parser.add_argument('-l', '--level', default=0, help='summary level')
+parser.add_argument('-p', '--path', default='.', help='path')
+
+
+def main():
+	args = parser.parse_args()
+	level = args.level
+	xml_files = [ i for i in os.listdir('.') if i.endswith(".xml") ]
+	for xml in xml_files:
+		xml_valgrind = VXML_Report()
+		xml_valgrind.load(xml)
+		print(xml_valgrind)
+		
+
+if __name__ == '__main__':
+	main()
