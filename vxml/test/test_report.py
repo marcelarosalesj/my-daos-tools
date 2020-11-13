@@ -2,6 +2,7 @@ import pytest
 import os
 
 from vxml.report import VXML_Report
+from vxml.error import VXML_Error
 
 current_path = os.getcwd()
 test_xml_path = '{}/vxml/test'.format(current_path)
@@ -44,6 +45,25 @@ def test_report_get_kinds():
 				   'Leak_PossiblyLost'])	
 
 def test_report_print():
+	expected_string = '\n{}\n'.format('-'*100)
+	expected_string += 'File: {}\n'.format('/home/marosale/Repos/my-daos-tools/vxml/test/example.xml')
+	expected_string += 'Number of errors: {}\n'.format('31')
+	expected_string += 'Command: {}\n'.format('/home/marosale/Repos/daos/install/bin/vos_tests -A 50')
+	expected_string += '{}\n'.format('-'*100)
+	expected_string += '{}:\t{}\n'.format('Leak_StillReachable', '9')
+	expected_string += '{}:\t{}\n'.format('Leak_DefinitelyLost', '16')
+	expected_string += '{}:\t{}\n'.format('Leak_IndirectlyLost', '5')
+	expected_string += '{}:\t{}\n'.format('Leak_PossiblyLost', '1')
+	expected_string += '{}\n'.format('-'*100)
 	report = VXML_Report()
 	report.load('{}/example.xml'.format(test_xml_path))
-	print(report)
+	assert str(report) == expected_string
+
+def test_report_iterate():
+	report = VXML_Report()
+	report.load('{}/example.xml'.format(test_xml_path))
+	for error in report:
+		assert isinstance(error, VXML_Error)
+
+
+

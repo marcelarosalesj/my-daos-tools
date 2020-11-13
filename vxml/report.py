@@ -3,6 +3,18 @@ from bs4 import BeautifulSoup
 from vxml.error import VXML_Error
 
 
+class VXML_ReportIterator:
+	def __init__(self, report):
+		self._report = report
+		self._index = 0
+	def __next__(self):
+		if self._index < len(self._report):
+			result = self._report.errors[self._index]
+			self._index += 1
+			return result
+		raise StopIteration
+		
+
 class VXML_Report:
 	def __init__(self):
 		self.file_path = ''
@@ -50,4 +62,7 @@ class VXML_Report:
 			ret += '{}:\t{}\n'.format(_k, self.count(_k))
 		ret += '{}\n'.format('-'*100)
 		return ret
-	
+
+	def __iter__(self):
+		return VXML_ReportIterator(self)
+			

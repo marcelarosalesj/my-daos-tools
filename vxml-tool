@@ -8,6 +8,7 @@ parser = argparse.ArgumentParser(description='Show Valgrind Summary')
 parser.add_argument('-l', '--level', default=0, help='summary level')
 parser.add_argument('-p', '--path', default='.', help='path')
 
+DEFAULT_CONFIG = 'vxml-config.yaml'
 
 def main():
 	args = parser.parse_args()

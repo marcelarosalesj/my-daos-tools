@@ -1,0 +1,6 @@
+# vxml-config.yaml
+ignore-list
+- Leak_StillReachable
+
+# only-list
+# - Leak_DefinitelyLost 
