@@ -1,8 +1,8 @@
 import pytest
 import os
 
-from vxml.report import VXML_Report
-from vxml.error import VXML_Error
+from vxml import VXML_Report
+from vxml import VXML_Error
 
 current_path = os.getcwd()
 test_xml_path = '{}/vxml/test'.format(current_path)
