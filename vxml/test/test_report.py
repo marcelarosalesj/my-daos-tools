@@ -65,5 +65,11 @@ def test_report_iterate():
 	for error in report:
 		assert isinstance(error, VXML_Error)
 
-
+def test_report_get_file_path():
+	report = VXML_Report()
+	report.load('{}/example.xml'.format(test_xml_path))
+	name = report.get_file_path()
+	assert name == 'example.xml'
+	name = report.get_file_path(complete=True)
+	assert name == '{}/example.xml'.format(test_xml_path)
 

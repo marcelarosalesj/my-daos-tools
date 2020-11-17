@@ -5,19 +5,41 @@ import argparse
 from vxml import VXML_Report
 
 parser = argparse.ArgumentParser(description='Show Valgrind Summary')
-parser.add_argument('-l', '--level', default=0, help='summary level')
-parser.add_argument('-p', '--path', default='.', help='path')
+parser.add_argument('-r', '--reverse', action='store_true',
+		    default=False, help='summary in reverse')
+parser.add_argument('path', nargs='?', default=os.getcwd(), help='path')
 
 DEFAULT_CONFIG = 'vxml-config.yaml'
 
 def main():
 	args = parser.parse_args()
-	level = args.level
-	xml_files = [ i for i in os.listdir('.') if i.endswith(".xml") ]
-	for xml in xml_files:
-		xml_valgrind = VXML_Report()
-		xml_valgrind.load(xml)
-		print(xml_valgrind)
+	path = args.path
+	xml_files = [ '{}/{}'.format(path, i)
+		      for i in os.listdir(path) if i.endswith(".xml") ]
+	if args.reverse:
+		reverse_summary = {}
+		for xml in xml_files:
+			xml_valgrind = VXML_Report()	
+			xml_valgrind.load(xml)
+			kinds = xml_valgrind.get_kinds()
+			for kind in kinds:
+				if not kind in reverse_summary:
+					reverse_summary[kind] = [xml_valgrind]
+				else:
+					reverse_summary[kind].append(xml_valgrind)
+
+		for key, value in reverse_summary.items():
+			print('\n'+'-'*100)
+			print(key)
+			print('-'*100)
+			for val in value:
+				print('{}\t\t\t{}'.format(val.get_file_path(), val.count(key)))
+			print('-'*100+'\n')
+	else:
+		for xml in xml_files:
+			xml_valgrind = VXML_Report()
+			xml_valgrind.load(xml)
+			print(xml_valgrind)
 		
 
 if __name__ == '__main__':

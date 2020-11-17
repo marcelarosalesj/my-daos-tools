@@ -51,6 +51,14 @@ class VXML_Report:
 	def get_kinds(self):
 		return self._kinds	
 
+	def get_file_path(self, complete=False):
+		if complete:
+			return self.file_path
+		else:
+			return self.file_path.split('/')[-1]
+	def get_errors(self):
+		return self.errors
+
 	def __str__(self):
 		ret = '\n{}\n'.format('-'*100)
 		ret += 'File: {}\n'.format(self.file_path)
