@@ -39,7 +39,8 @@ def main():
 		for xml in xml_files:
 			xml_valgrind = VXML_Report()
 			xml_valgrind.load(xml)
-			print(xml_valgrind)
+			if len(xml_valgrind) > 0:
+				print(xml_valgrind)
 		
 
 if __name__ == '__main__':
