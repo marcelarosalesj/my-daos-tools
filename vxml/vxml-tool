@@ -1,47 +1,49 @@
 #!/bin/python3
+''' tool to parse Valgrind XML files '''
 import os
 import argparse
 
-from vxml import VXML_Report
+from vxml import VXMLReport
 
 parser = argparse.ArgumentParser(description='Show Valgrind Summary')
 parser.add_argument('-r', '--reverse', action='store_true',
-		    default=False, help='summary in reverse')
+                    default=False, help='summary in reverse')
 parser.add_argument('path', nargs='?', default=os.getcwd(), help='path')
 
 DEFAULT_CONFIG = 'vxml-config.yaml'
 
 def main():
-	args = parser.parse_args()
-	path = args.path
-	xml_files = [ '{}/{}'.format(path, i)
-		      for i in os.listdir(path) if i.endswith(".xml") ]
-	if args.reverse:
-		reverse_summary = {}
-		for xml in xml_files:
-			xml_valgrind = VXML_Report()	
-			xml_valgrind.load(xml)
-			kinds = xml_valgrind.get_kinds()
-			for kind in kinds:
-				if not kind in reverse_summary:
-					reverse_summary[kind] = [xml_valgrind]
-				else:
-					reverse_summary[kind].append(xml_valgrind)
+    ''' main '''
+    args = parser.parse_args()
+    path = args.path
+    xml_files = ['{}/{}'.format(path, i)
+                 for i in os.listdir(path) if i.endswith(".xml")]
+    if args.reverse:
+        reverse_summary = {}
+        for xml in xml_files:
+            xml_valgrind = VXMLReport()
+            xml_valgrind.load(xml)
+            kinds = xml_valgrind.get_kinds()
+            for kind in kinds:
+                if not kind in reverse_summary:
+                    reverse_summary[kind] = [xml_valgrind]
+                else:
+                    reverse_summary[kind].append(xml_valgrind)
 
-		for key, value in reverse_summary.items():
-			print('\n'+'-'*100)
-			print(key)
-			print('-'*100)
-			for val in value:
-				print('{}\t\t\t{}'.format(val.get_file_path(), val.count(key)))
-			print('-'*100+'\n')
-	else:
-		for xml in xml_files:
-			xml_valgrind = VXML_Report()
-			xml_valgrind.load(xml)
-			if len(xml_valgrind) > 0:
-				print(xml_valgrind)
-		
+        for key, value in reverse_summary.items():
+            print('\n'+'-'*100)
+            print(key)
+            print('-'*100)
+            for val in value:
+                print('{}\t\t\t{}'.format(val.get_file_path(), val.count(key)))
+            print('-'*100+'\n')
+    else:
+        for xml in xml_files:
+            xml_valgrind = VXMLReport()
+            xml_valgrind.load(xml)
+            if len(xml_valgrind) > 0:
+                print(xml_valgrind)
+
 
 if __name__ == '__main__':
-	main()
+    main()

@@ -1,2 +1,2 @@
-from .report import VXML_Report
-from .error import VXML_Error
+from .report import VXMLReport
+from .error import VXMLError

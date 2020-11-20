@@ -1,11 +1,29 @@
+''' This module contains the error class that represents Valgrind leaks. '''
 
-class VXML_Error:
-	def __init__(self, kind):
-		self.kind = kind
-	def get_kind(self):
-		return self.kind
-	def __str__(self):
-		return self.kind
+class VXMLError:
+    '''
+    A class to represent Valgrind XML errors
+    '''
+    def __init__(self, kind):
+        '''
+        Constructs an error object
+        '''
+        self.kind = kind
 
+    def __str__(self):
+        '''
+        Informal string representation of the object
+        '''
+        return self.kind
 
+    def get_kind(self):
+        '''
+        Returns the kind of the error
+        '''
+        return self.kind
 
+    def set_kind(self, kind):
+        '''
+        Set error kind
+        '''
+        self.kind = kind

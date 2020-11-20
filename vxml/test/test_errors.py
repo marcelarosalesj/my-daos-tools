@@ -1,14 +1,13 @@
-import pytest
-import os
-
-from vxml import VXML_Error
+''' Unit Tests for error module '''
+from vxml import VXMLError
 
 def test_error_get_kind():
-	err = VXML_Error(kind = 'Leak_StillReachable')	
-	assert err.get_kind() == 'Leak_StillReachable'
+    ''' Test error get_kind function '''
+    err = VXMLError(kind='Leak_StillReachable')
+    assert err.get_kind() == 'Leak_StillReachable'
 
 
 def test_error_print():
-	err = VXML_Error(kind = 'Leak_StillReachable')	
-	print(err)
-	
+    ''' Test error __str__ work '''
+    err = VXMLError(kind='Leak_StillReachable')
+    print(err)
