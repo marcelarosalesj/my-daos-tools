@@ -24,3 +24,26 @@ class VXMLReportTool:
                         self.reports.append(xml_valgrind)
         else:
             print('Wrong input')
+
+    def print_reports(self, reverse = False):
+        if len(self.reports) > 0:
+            if not reverse:
+                for report in self.reports:
+                    print(report, end='')
+            else:
+                reverse_summary = {}
+                for report in self.reports:
+                    kinds = report.get_kinds()
+                    for kind in kinds:
+                        if not kind in reverse_summary:
+                            reverse_summary[kind] = [report]
+                        else:
+                            reverse_summary[kind].append(report)
+                for key, value in reverse_summary.items():
+                    print('\n'+'-'*100)
+                    print(key)
+                    print('-'*100)
+                    for val in value:
+                        print('{}\t\t\t{}'.format(val.get_file_path(), val.count(key)))
+                    print('-'*100+'\n')
+

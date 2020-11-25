@@ -3,7 +3,7 @@
 import os
 import argparse
 
-from vxml import VXMLReport
+from vxml import VXMLReportTool
 
 parser = argparse.ArgumentParser(description='Show Valgrind Summary')
 parser.add_argument('-r', '--reverse', action='store_true',
@@ -16,33 +16,14 @@ def main():
     ''' main '''
     args = parser.parse_args()
     path = args.path
-    xml_files = ['{}/{}'.format(path, i)
-                 for i in os.listdir(path) if i.endswith(".xml")]
-    if args.reverse:
-        reverse_summary = {}
-        for xml in xml_files:
-            xml_valgrind = VXMLReport()
-            xml_valgrind.load(xml)
-            kinds = xml_valgrind.get_kinds()
-            for kind in kinds:
-                if not kind in reverse_summary:
-                    reverse_summary[kind] = [xml_valgrind]
-                else:
-                    reverse_summary[kind].append(xml_valgrind)
+    
+    report_tool = VXMLReportTool()
+    report_tool.setup(path)
 
-        for key, value in reverse_summary.items():
-            print('\n'+'-'*100)
-            print(key)
-            print('-'*100)
-            for val in value:
-                print('{}\t\t\t{}'.format(val.get_file_path(), val.count(key)))
-            print('-'*100+'\n')
+    if args.reverse:
+        report_tool.print_reports(reverse=True)
     else:
-        for xml in xml_files:
-            xml_valgrind = VXMLReport()
-            xml_valgrind.load(xml)
-            if len(xml_valgrind) > 0:
-                print(xml_valgrind)
+        report_tool.print_reports()
 
 
 if __name__ == '__main__':
