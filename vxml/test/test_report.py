@@ -5,7 +5,7 @@ from vxml import VXMLReport
 from vxml import VXMLError
 
 CURRENT_PATH = os.getcwd()
-TEST_XML_PATH = '{}/vxml/test'.format(CURRENT_PATH)
+TEST_XML_PATH = '{}/vxml/test/xmls'.format(CURRENT_PATH)
 
 def test_report_init():
     ''' Test report contructor '''
@@ -51,7 +51,7 @@ def test_report_get_kinds():
 
 def test_report_print():
     ''' Test report __str__ works '''
-    file_line = '/home/marosale/Repos/my-daos-tools/vxml/test/example.xml'
+    file_line = '{}/example.xml'.format(TEST_XML_PATH)
     command_line = '/home/marosale/Repos/daos/install/bin/vos_tests -A 50'
     expected_string = '\n{}\n'.format('-'*100)
     expected_string += 'File: {}\n'.format(file_line)
