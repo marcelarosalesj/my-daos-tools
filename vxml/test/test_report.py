@@ -8,7 +8,7 @@ CURRENT_PATH = os.getcwd()
 TEST_XML_PATH = '{}/vxml/test/xmls'.format(CURRENT_PATH)
 
 def test_report_init():
-    ''' Test report contructor '''
+    ''' Test report constructor '''
     report = VXMLReport()
     assert isinstance(report, VXMLReport)
 
