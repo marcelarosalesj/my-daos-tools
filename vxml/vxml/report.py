@@ -29,7 +29,7 @@ class VXMLReport:
     '''
     VXMLReport class that represents Valgrind VXMLs
     '''
-    def __init__(self):
+    def __init__(self, verbose=0):
         '''
         Constructor for VXMLReport class
         '''
@@ -38,20 +38,30 @@ class VXMLReport:
         self._soup = None
         self._kinds = []
         self.errors = []
+        self.verbose = verbose
 
     def __len__(self):
         return len(self.errors)
 
     def __str__(self):
-        ret = '\n{}\n'.format('-'*100)
-        ret += 'File: {}\n'.format(self.file_path)
-        ret += 'Number of errors: {}\n'.format(len(self))
-        ret += 'Command: {}\n'.format(self.command[:100])
+        header = '\n{}\n'.format('-'*100)
+        header += 'File: {}\n'.format(self.file_path)
+        header += 'Number of errors: {}\n'.format(len(self))
+        header += 'Command: {}\n'.format(self.command[:100])
+        header += '{}\n'.format('-'*100)
+        ret = ''
+
+        if self.verbose == 0 and len(self._kinds) == 1:
+            if self._kinds[0] == 'Leak_StillReachable':
+                return ret
+
+        for _kind in self._kinds:
+            if self.verbose == 0 and _kind == 'Leak_StillReachable':
+                pass
+            else:
+                ret += '{}:\t{}\n'.format(_kind, self.count(_kind))
         ret += '{}\n'.format('-'*100)
-        _kinds = self.get_kinds()
-        for _kind in _kinds:
-            ret += '{}:\t{}\n'.format(_kind, self.count(_kind))
-        ret += '{}\n'.format('-'*100)
+        ret = header + ret
         return ret
 
     def __iter__(self):

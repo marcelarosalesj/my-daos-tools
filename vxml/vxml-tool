@@ -9,16 +9,15 @@ parser = argparse.ArgumentParser(description='Show Valgrind Summary')
 parser.add_argument('-r', '--reverse', action='store_true',
                     default=False, help='summary in reverse')
 parser.add_argument('path', nargs='?', default=os.getcwd(), help='path')
+parser.add_argument('-v', '--verbose', action='count', default=0)
 
 DEFAULT_CONFIG = 'vxml-config.yaml'
 
 def main():
     ''' main '''
     args = parser.parse_args()
-    path = args.path
-    
     report_tool = VXMLReportTool()
-    report_tool.setup(path)
+    report_tool.setup(args.path, args.verbose)
 
     if args.reverse:
         report_tool.print_reports(reverse=True)
