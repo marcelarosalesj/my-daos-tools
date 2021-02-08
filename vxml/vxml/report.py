@@ -75,8 +75,14 @@ class VXMLReport:
         with open(self.file_path) as xml_file:
             content = xml_file.read()
         self._soup = BeautifulSoup(content, 'xml')
+        """
         self.command = [line.text for line in self._soup.find_all('line')
                         if 'Command' in line.text][0][9:]
+        """
+        for line in self._soup.find_all('line'):
+            if 'Command' in line.text:
+                self.command = line.text[0][9:]
+
         errors = self._soup.find_all('error')
         for error in errors:
             err = VXMLError(error.kind.text)
